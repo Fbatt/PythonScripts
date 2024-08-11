@@ -1,0 +1,160 @@
+intermediary and output variables  in Ags model notebook, as they appear, in categories
+
+
+## Category: fluxes using the A-Gs scheme ##
+co2_ppm  
+	co2 concentration, taken from df_profile_filter['CO2level1']
+epsi
+	epsilon parameter. set to 1.
+sigma
+	sigma parameter. set to 5.67E-8
+Tair_K
+	temperature of air in kelvin, taken from df_Comb_filter['Tair']
+Ts_K
+	temperature of surface in  kelvin, calculated based on longwave outgoing radiation, epsilon and sigma
+Ts_C
+	temperature of surface in celcius
+conv_fac
+	converstion factor to convert co2 from ppm to mg/m3, calculated from on Tair_K, obtained via the ideal gas law. units: mol / m3
+co2_mgm3
+	concentration of co2 in mg/m3
+Ts
+	an alias for Ts_C. surface temp in Celsius.
+
+rho_1
+	density of air in kg/m3, set to 1.225
+
+
+## Category: Fixed constants for Ags ## 
+Q10gm
+	Parameter to calculate the mesophyll conductance, set to 2.0
+Q10am
+	Parameter to calculate max primary productivity, set to 2.0
+Q10gamma
+	Parameter to calculate the CO2 compensation concentration, set to 2 (default values are 2 in IFS, 1.5 in DALES)
+
+## Category: Reference temperatures calculation mesophyll conductance ##
+T1gm
+	conversion scalar to convert from kelvin to celcius
+T2gm 
+	conversion scalar to convert from kelvin to some other scale (default values are IFS=309, DALES=301)
+
+## Category: Reference temperatures calculation max primary productivity ##
+T1Am
+	conversion scalar to convert from kelvin to celcius (default values are IFS=281, DALES=286 (C4))
+T2Am
+	conversion scalar to convert from kelvin to some other scale (default values are IFS=309, DALES=301)
+
+## Category: Other constants calculation max GPP ##
+nuco2q
+	Ratio molecular viscosity water to carbon dioxide
+gmin
+	Cuticular (minimum) conductance. NOTE: also called g_cu in IFS, with a factor 1000 difference (m/s)
+ad
+	Regression coefficient to calculate Cfrac (kpa-1)
+Kx
+	Extinction coefficient PAR (mground / mleaf)
+
+## Category: Maximum quantum use efficiency and vegetation specific constants ##
+epsilon0 (also named aplha)
+	Maximum quantum use efficiency, set to 0.0144 mgCO2 / J PAR.
+gm298_umol
+	[??? 298 is a reference to a temperature but I suspect the units are umolm-2s-1] set to 0.09 note from author: obtained from litature: Knauer et al. 2018: Effects of mesophyll conductance .....
+gm298
+	same as above but converted to (mm/s)
+Ammax298
+	CO2 maximal primary productivity, set to 2.6
+f0
+	Maximum value Cfrac, set to 0.89
+co2_comp298   = (42 * 44.01) * (1/24.45)
+	[???] converted from ppm to mg/m3. Author's note: Got value 42 from the Atmospheric boundary layer book
+
+## Category: LAI ##
+LAI
+	leaf area index in m2m-2
+
+## Category: Constant molar mass ##
+constants_M_co2 = 44.01
+	molar mass co2
+constants_M_air = 28.97
+	molar mass air
+
+## calculations: CO2 compensation concentration ##
+# Calculate the CO2 compensation concentration (IFS eq. 8.92)
+# "The compensation point Γ is defined as the CO2 concentration at which the net CO2 assimilation of a fully lit leaf becomes zero."
+co2_comp
+	compensation concentration for CO2 in mg/m3
+
+# Calculate the mesophyll conductance (IFS eq. 8.93)
+# "The mesophyll conductance gm describes the transport of CO2 from the substomatal cavities to the mesophyll cells where the carbon is fixed."
+gm
+	mesophyll conductance in m/s
+fmin0
+	co2 concentration inside the leaf (also named Ci)
+fmin
+	minimum value of Cfrac
+VPD
+	measured value VPD from df_Comb_filter. (also named Ds in DALES)
+VPDmax
+	max VPD. calculated with: f0-fmin / ad 
+cfrac
+	fraction of the cencentration inside the leaf in comparison to surface of the leaf
+co2_abs
+	absolute co2 concentration in mg/m3. alias of co2_mgm3
+ci
+	co2 concentration in the leaf (mg/m3)
+Ammax
+	max gross primary production in high light conditions (mg/m2/s)
+Am
+	gross assimilation rate (mg/m2/s)
+Rdark
+	autotrophic dark respiration (mg/m2/s)
+PAR
+	photosynthetically active radiation (calibrated for loobos)
+epsilon
+	maximum quantum use efficiency (mgCO2/J PAR)
+Ag
+	gross primary productivity in mg/m2/s
+
+## Category: Calculating Net assimilation part 1: net flow co2 into the plant (An) ##
+tempy
+	an input value for E1 based on epsilon, Kx, PAR, Am and Rdark
+E1(x)
+	a function that calculates..... upscaling from leaf to canopy? Uses tempy as input. Unsure.
+		output: E1_second
+E1_second
+	a value used for calculating An based on function E1 and input tempy.
+An_canopy
+	net flow co2 into plant on canopy scale. uses E1_second and other values to calculate.
+	
+## Category: Calculating Net assimilation part 2: CO2 conductance at canopy level ##
+a1
+	???
+Dstar
+	some value for VPD, perhaps reference value.
+fstr
+	a factor ranging from 0-1 representing moisture stress
+		0: value at wilting point. 1: absence of moisture stress
+gcco2
+	something... (unit is m/s)
+
+## Category: Calculating Net assimilation part 3:surface resistance for moisture and CO2 (rs) ##
+rs
+	surface resistance for H2O
+rsCO2
+	surface resistance for CO2
+
+## Category: Calculating Net assimilation part 4: aerodynamic resistance (ra) ##
+U
+	vertical windspeed
+U_star
+	shear velocity, aka friction velocity
+ra
+	aerodynamic resistance (ra)
+
+An_final
+	net assimilation, aka net flow of CO2 into the plant.
+	Note: This is the main output of the model
+
+
+	

@@ -1,0 +1,42 @@
+filtering and input variables in Ags model notebook, as they appear, in categories
+
+
+## category: PAR and VPD ##
+IPAR 
+a series of booleans representing a filtermask for PAR (photosynthetically active radiation)
+	based on filter: GPP ==0 and PAR>5
+IVPD 
+a series of booleans representing a filtermask for VPD (vapor pressure defecit)
+	based on filter: VPD>0.1
+
+
+## category: Precipitation ##
+precip 
+a series containing halfhourly precipitation data
+I0
+a series containing filtered halfhourly precipitation data
+	based on filter: precip>0 (is this to take out errors?)
+II
+a series of booleans representing a filtermask for Precipitation
+	based on filter: precipitation in current 30 minutes and previous 60 minutes is exactly 0 (total span 90 minutes)
+
+
+## category: CO2 ##
+CO2
+a series of booleans representing a filtermask for CO2 concentration,  based on df_profile dataframe
+	based on filter: CO2 >300 (ppm?)
+
+
+## category: filtered dataframes ##
+df_meteo_filter
+df_Comb_filter
+df_profile_filter
+df_EC_filter
+
+these are all variations of the dataframes df_meteo, df_Comb, df_profile, df_EC,
+but they are each filtered in succession so CO2 >300, Precip(90min) == 0, VPD>0.1, and PAR>5, respectively
+
+
+## category: GPP ##
+GPP_f
+a series containing GPP_f, taken from df_Comb_filter (filtered based on: PAR>5), but converted from umolm-2s-1 to mgm-2s-1  (microgram per m2 per s)

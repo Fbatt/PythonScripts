@@ -1,8 +1,8 @@
 #Data filtering happens here (removing nonsensical data or out of bounds data, like -500C in temperature etc. Usually result from sensor error).
 
-def Filter_wrap(filterversion='default',df_Comb,df_profile,df_meteo,df_EC):
+def Filter_wrap(df_Comb,df_profile,df_meteo,df_EC,filterversion='default'):
     '''Function for filtering data based on excluding nonsensical and out-of-bounds values (sensor error).
-    args are filterversion='default',df_Comb,df_profile,df_meteo,df_EC in that order.
+    args are df_Comb,df_profile,df_meteo,df_EC,filterversion in that order.
     returns CO2,Locorr,VPD,Ustar,df_profile_filter,df_meteo_filter,df_Comb_filter,df_EC_filter in that order.'''
     
     # Make filter for GPP orginial data and not gapfilled
